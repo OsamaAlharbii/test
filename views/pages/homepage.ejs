@@ -1,0 +1,49 @@
+
+This is your default homepage.
+For more information, see:
+• https://sailsjs.com/documentation/concepts/views
+• https://sailsjs.com/documentation/concepts/routes
+-->
+<link
+  href="https://fonts.googleapis.com/css?family=Lato:300,400"
+  rel="stylesheet"
+/>
+
+ <script type="text/javascript" src="dependencies/sails.io.js"></script>
+<body>
+  <label for="fname">First name:</label>
+  <input type="text" class="inputField" name="fname" />
+  <button onclick="hello()">Hello</button>
+
+  <script> 
+    // io.sails.autoConnect = false;
+
+    io.sails.url = "http://localhost:1337";
+    var newSocket = io.sails.connect();
+
+    newSocket.on("connect", () => {
+      console.log("hi");
+      io.socket._raw.emit('hello',{msg:"go"})
+    });
+
+    newSocket.on("hello", function (Data) {
+      console.log(Data)
+      console.log("Socket `" + Data.msg + "` joined the party!");
+    });
+
+    const hello = () => {
+      const userInput = document.querySelector(".inputField");
+      const msg = userInput.value;
+      data = {};
+      data.message = msg;
+      newSocket.get("/ghg", data, function gotResponse(data, jwRes) {
+        console.log(
+          "Server responded with status code " +
+            jwRes.statusCode +
+            " and data: ",
+          data
+        );
+      });
+    };
+  </script>
+</body>
